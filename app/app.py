@@ -2,9 +2,9 @@
 import os
 import string
 from functools import wraps
-from flask import Flask, request, redirect, jsonify, render_template
-import redis
 import psycopg2
+import redis
+from flask import Flask, jsonify, redirect, render_template, request
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ ALPHABET = string.digits + string.ascii_lowercase + string.ascii_uppercase
 # Connect to Redis for fast lookups
 cache = redis.Redis(
     host=os.environ.get("REDIS_HOST", "redis"),
-    port=int(os.environ.get("REDIS_PORT", 6379)),
+    port=int(os.environ.get("REDIS_PORT", "6379")),
     decode_responses=True,
 )
 

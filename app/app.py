@@ -2,6 +2,7 @@
 import os
 import string
 from functools import wraps
+
 import psycopg2
 import redis
 from flask import Flask, jsonify, redirect, render_template, request

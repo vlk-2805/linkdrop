@@ -42,6 +42,18 @@ Visit `http://localhost:5000/<short_code>` to redirect to the original URL. The 
 
 The `/shorten` endpoint is limited to 10 requests per minute per client IP.
 
+## Continuous integration
+
+GitHub Actions runs Ruff and pytest on pushes and pull requests targeting `main`. The tests use lightweight fakes for Redis and PostgreSQL, so the CI job does not need Docker or cloud credentials.
+
+To run the same checks locally, install the development dependencies and run:
+
+```sh
+python -m pip install -r requirements-dev.txt
+ruff check app tests
+pytest -q
+```
+
 ## Project layout
 
 - `docker-compose.yaml` — Flask, PostgreSQL, and Redis services.

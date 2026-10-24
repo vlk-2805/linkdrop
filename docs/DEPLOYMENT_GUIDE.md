@@ -33,6 +33,8 @@ The instance uses an encrypted 16 GiB gp3 root volume. PostgreSQL data lives in 
 2. AWS CLI v2 configured with a temporary authenticated profile, Terraform 1.7+, Git, and Docker for local development.
 3. Public GitHub repository `vlk-2805/linkdrop`, Actions enabled, and the `main` branch.
 
+If AWS returns `explicit deny in a service control policy`, the AWS Organization is blocking the operation above the account role. Ask the Organization administrator to allow the required EC2, IAM, ECR, VPC, and Systems Manager operations, or use an AWS account outside that restricted Organization. A broader role inside the same Organization cannot override an explicit service control policy deny.
+
 For local AWS CLI sign-in, use IAM Identity Center where available, then check the active account with `aws sts get-caller-identity`. Do not create root access keys or commit AWS credentials.
 
 ## Provision the EC2 host and deployment role

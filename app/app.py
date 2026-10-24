@@ -16,6 +16,8 @@ cache = redis.Redis(
     host=os.environ.get("REDIS_HOST", "redis"),
     port=int(os.environ.get("REDIS_PORT", 6379)),
     decode_responses=True,
+    password=os.environ.get('REDIS_PASSWORD') or None,
+    ssl=os.environ.get('REDIS_TLS', 'false').lower() == 'true',
 )
 
 
@@ -95,7 +97,7 @@ def shorten_url():
     # Cache the mapping for fast redirects later
     cache.set(short_code, long_url)
 
-    return jsonify({"short_url": f"http://localhost:5000/{short_code}", "short_code": short_code}), 201
+    return jsonify({"short_url": f"{request.host_url.rstrip('/')}/{short_code}", "short_code": short_code}), 201
 
 @app.route("/<short_code>")
 def redirect_url(short_code):

@@ -38,9 +38,13 @@ A successful response contains the short URL and short code:
 {"short_url":"http://localhost:5000/1","short_code":"1"}
 ```
 
-Visit `http://localhost:5000/<short_code>` to redirect to the original URL. The service returns `404` when a code is not found. `GET /health` returns a simple health status.
+Visit `http://localhost:5000/<short_code>` to redirect to the original URL. The service returns `404` when a code is not found. `GET /health` returns a simple health status. The `/shorten` endpoint is limited to 10 requests per minute per client IP.
 
-The `/shorten` endpoint is limited to 10 requests per minute per client IP.
+## AWS deployment
+
+The learning deployment uses one small EC2 instance to run the existing Flask, PostgreSQL, and Redis Compose services. GitHub Actions builds the Flask image and deploys it through AWS Systems Manager using GitHub OIDC temporary credentials. It does not use RDS, ElastiCache, ECS, a load balancer, a NAT Gateway, SSH access, or permanent AWS keys in GitHub.
+
+Set a zero-spend AWS Budget alert before creating resources and terminate the EC2 instance when finished testing. See the [AWS EC2 deployment guide](docs/DEPLOYMENT_GUIDE.md) for cost controls, Terraform setup, CI/CD configuration, troubleshooting, teardown, and interview notes. The Terraform files do not create resources until you apply them in your AWS account.
 
 ## Project layout
 
@@ -48,8 +52,6 @@ The `/shorten` endpoint is limited to 10 requests per minute per client IP.
 - `app/app.py` — Flask routes, code generation, database access, caching, and rate limiting.
 - `app/templates/index.html` — web interface.
 - `app/init.sql` — database table definition, applied when PostgreSQL initializes its data volume.
-- `app/Dockerfile` and `app/requirements.txt` — Python container build and dependencies.
-
-## Configuration
-
-Docker Compose sets the database and Redis connection settings for the app. The current Compose file uses local development credentials and exposes the app on port `5000`; change these values before using the service in a public or production environment.
+- `app/Dockerfile` and `app/requirements.txt` — Python container build.
+- `infra/terraform/` — one EC2 host, ECR repository, network, instance role, and GitHub OIDC deploy role.
+- `.github/workflows/deploy.yml` — build and deploy on pushes to `main`.

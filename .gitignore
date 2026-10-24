@@ -9,3 +9,12 @@ venv/
 .DS_Store
 .idea/
 .vscode/
+
+# Terraform state and provider cache
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+*.tfvars
+*.tfvars.json
